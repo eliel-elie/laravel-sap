@@ -1,0 +1,40 @@
+{
+    "name": "elielelie/laravel-sap",
+    "description": "SAP features integrated with Laravel.",
+    "keywords": [
+        "php",
+        "laravel",
+        "driver",
+        "SAP"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Elielelie\\Sap\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Eliel Ferreira",
+            "email": "eliel_elie@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "laravel/framework": "^8.75"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Elielelie\\Sap\\SapServiceProvider"
+            ],
+            "aliases": [
+                {
+                    "alias": "Sap",
+                    "facade": "Elielelie\\Sap\\Facades\\Sap"
+                }
+            ]
+        }
+    }
+}
