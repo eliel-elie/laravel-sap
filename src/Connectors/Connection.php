@@ -12,7 +12,7 @@ class Connection
     /**
      * Sapnwrfc handle.
      *
-     * @var sapnwrfc|SAPNWRFC\Connection
+     * @var SAPNWRFC\Connection
      */
     private $handle;
 
@@ -81,7 +81,7 @@ class Connection
     /**
      * Retrieve the connection handle.
      *
-     * @return sapnwrfc|SAPNWRFC\Connection
+     * @return SAPNWRFC\Connection
      */
     public function getHandle()
     {
@@ -96,9 +96,9 @@ class Connection
     private function initialize()
     {
         try {
-            if (PHP_VERSION[0] === '7') {
-                $this->handle = new \SAPNWRFC\Connection($this->server->toArray());
-            }
+
+            $this->handle = new \SAPNWRFC\Connection($this->server->toArray());
+
         }
         catch (Exception $e) {
             throw new ConnectionException($e);
