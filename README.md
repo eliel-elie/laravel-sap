@@ -4,7 +4,7 @@
 
 ![Maintainer](https://img.shields.io/badge/maintainer-Eliel%20Ferreira-informational)
 ![PHP](https://img.shields.io/badge/PHP->=7.3-blueviolet)
-![VERSION](https://img.shields.io/badge/stable-v0.0.1-blue)
+![VERSION](https://img.shields.io/badge/stable-v1.0.0-blue)
 ![BUILD](https://img.shields.io/badge/build-pass-success)
 ![LICENSE](https://img.shields.io/badge/license-MIT-success)
 
@@ -42,6 +42,8 @@ $sap = app(Sap::class);
 
 $connection = $sap->open();
 
+or
+
 // Connection name defined in the configuration file config/sap.php
  
 $connection = $sap->open('name');
@@ -58,7 +60,7 @@ $connection = $sap->open('name');
 $function = $connection->fm('BAPI_USER_GET_DETAIL');
 
 // Get function description.
-//print_r($function->description());
+print_r($function->description());
 
 // Add import parameter.
 $function->param('USERNAME', 'USER');
@@ -87,7 +89,7 @@ $function->param('QUERY_TABLE', 'USR01')
 	->param('DELIMITER', '~')
 ;
 
-$result = $function->invoke();
+$result = $function->execute();
 
 $connection->close();
 
