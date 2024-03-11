@@ -2,18 +2,16 @@
 
 namespace Elielelie\Sap;
 
-use Elielelie\Sap\Helpers\Arr;
-use Elielelie\Sap\Helpers\Guid;
+use Elielelie\Sap\Commands\TestSapConnection;
+use Elielelie\Sap\Helpers\{Arr, Guid};
 use Illuminate\Support\ServiceProvider;
 
-class SapServiceProvider extends  ServiceProvider
+class SapServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application events.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/../config/sap.php' => config_path('sap.php'),
@@ -22,14 +20,18 @@ class SapServiceProvider extends  ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../config/sap.php', 'sap'
         );
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                TestSapConnection::class,
+            ]);
+        }
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('sap', function ($app) {
             return new Sap();
