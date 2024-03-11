@@ -18,15 +18,12 @@ class Connection
 
     /**
      * Server config.
-     *
-     * @var Server
      */
     private Server $server;
 
     /**
      * Create a new instance of the object.
      *
-     * @param Server $server
      * @return void
      */
     public function __construct(Server $server)
@@ -37,10 +34,8 @@ class Connection
 
     /**
      * Check if the connection is alive.
-     *
-     * @return bool
      */
-    public function ping()
+    public function ping(): bool
     {
         return $this->handle->ping();
     }
@@ -51,18 +46,15 @@ class Connection
      * @return bool True if the connection was closed, false if the connection
      *              is closed already.
      */
-    public function close()
+    public function close(): bool
     {
         return $this->handle->close();
     }
 
     /**
      * Lookup a RFC function.
-     *
-     * @param string $name
-     * @return FunctionModule
      */
-    public function fm($name)
+    public function fm(string $name): FunctionModule
     {
         return new FunctionModule($this, $name);
     }
@@ -70,10 +62,9 @@ class Connection
     /**
      * Lookup a custom RFC function.
      *
-     * @param string $class
      * @return mixed
      */
-    public function fmc($class)
+    public function fmc(string $class)
     {
         return new $class($this);
     }
@@ -90,20 +81,14 @@ class Connection
 
     /**
      * Perform the actual connection.
-     *
-     * @return void
      */
-    private function initialize()
+    private function initialize(): void
     {
         try {
-
             $this->handle = new \SAPNWRFC\Connection($this->server->toArray());
-
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new ConnectionException($e);
-        }
-        catch (RuntimeException $e) {
+        } catch (RuntimeException $e) {
             throw new ConnectionException($e);
         }
     }
