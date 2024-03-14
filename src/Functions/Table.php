@@ -8,7 +8,7 @@ use Elielelie\Sap\Exceptions\FunctionModuleParameterBindException;
 use Elielelie\Sap\Facades\Arr;
 use Illuminate\Support\Collection;
 
-class Table extends FunctionModule
+class Table extends FunctionModule implements TableInterface
 {
     /**
      * @var array

@@ -24,11 +24,11 @@ class QueryBuilder
     /**
      * Create a new instance of Query Builder
      *
-     * @param Table $parent
+     * @param TableInterface $parent
      *
      * @return void
      */
-    public function __construct(Table $parent = null)
+    public function __construct(TableInterface $parent = null)
     {
         $this->parent = $parent;
     }
