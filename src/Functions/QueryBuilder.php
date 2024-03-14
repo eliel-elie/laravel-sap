@@ -19,7 +19,7 @@ class QueryBuilder
      * @var int
      */
     private int $index = 0;
-    private ?Table $parent;
+    private ?TableInterface $parent;
 
     /**
      * Create a new instance of Query Builder
@@ -124,7 +124,7 @@ class QueryBuilder
      *
      * @return array
      */
-    public function options(array $wheres = null)
+    public function options(array $wheres = null): array
     {
         if (is_null($wheres)) {
             $wheres = $this->wheres;
