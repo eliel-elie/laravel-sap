@@ -28,12 +28,10 @@
             "providers": [
                 "Elielelie\\Sap\\SapServiceProvider"
             ],
-            "aliases": [
-                {
-                    "alias": "Sap",
-                    "facade": "Elielelie\\Sap\\Facades\\Sap"
-                }
-            ]
+            "aliases": {
+                "alias": "Sap",
+                "facade": "Elielelie\\Sap\\Facades\\Sap"
+            }
         }
     }
 }
