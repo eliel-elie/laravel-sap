@@ -49,7 +49,7 @@ class Table extends FunctionModule implements TableInterface
      *
      * @return $this
      */
-    public function delimiter(string $value): Table
+    public function delimiter(string $value): TableInterface
     {
         return $this->param('DELIMITER', $value);
     }
@@ -61,7 +61,7 @@ class Table extends FunctionModule implements TableInterface
      *
      * @return $this
      */
-    public function fields(array $fields): Table
+    public function fields(array $fields): TableInterface
     {
         foreach ($fields as $key => $field) {
             $this->attributes[] = ['FIELDNAME' => strtoupper($field)];
@@ -92,7 +92,7 @@ class Table extends FunctionModule implements TableInterface
      *
      * @return $this
      */
-    public function limit(int $number)
+    public function limit(int $number): TableInterface
     {
         return $this->param('ROWCOUNT', (int)$number);
     }
@@ -104,7 +104,7 @@ class Table extends FunctionModule implements TableInterface
      *
      * @return $this
      */
-    public function offset(int $number)
+    public function offset(int $number): TableInterface
     {
         return $this->param('ROWSKIPS', (int)$number);
     }
@@ -116,7 +116,7 @@ class Table extends FunctionModule implements TableInterface
      *
      * @return $this
      */
-    public function table(string $name): Table
+    public function table(string $name): TableInterface
     {
         return $this->param('QUERY_TABLE', strtoupper($name));
     }
