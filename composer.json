@@ -29,8 +29,7 @@
                 "Elielelie\\Sap\\SapServiceProvider"
             ],
             "aliases": {
-                "alias": "Sap",
-                "facade": "Elielelie\\Sap\\Facades\\Sap"
+                "Sap": "Elielelie\\Sap\\Facades\\Sap"
             }
         }
     }
