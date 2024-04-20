@@ -3,8 +3,8 @@
 > SAP features integrated with Laravel.
 
 ![Maintainer](https://img.shields.io/badge/maintainer-Eliel%20Ferreira-informational)
-![PHP](https://img.shields.io/badge/PHP->=7.3-blueviolet)
-![VERSION](https://img.shields.io/badge/stable-v1.0.0-blue)
+![PHP](https://img.shields.io/badge/PHP->=8.0-blueviolet)
+![VERSION](https://img.shields.io/badge/stable-v1.0.5-blue)
 ![BUILD](https://img.shields.io/badge/build-pass-success)
 ![LICENSE](https://img.shields.io/badge/license-MIT-success)
 
