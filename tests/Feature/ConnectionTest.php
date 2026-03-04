@@ -4,24 +4,22 @@ use Elielelie\Sap\Connectors\Connection;
 use Elielelie\Sap\Connectors\Server;
 
 describe('Connection', function () {
-    beforeEach(function () {
-        $this->config = [
-            'user'   => 'testuser',
-            'passwd' => 'testpass',
-            'client' => '100',
-            'ashost' => 'localhost',
-            'sysnr'  => '00',
-            'lang'   => 'EN',
-        ];
-    });
+    $config = [
+        'user'   => 'testuser',
+        'passwd' => 'testpass',
+        'client' => '100',
+        'ashost' => 'localhost',
+        'sysnr'  => '00',
+        'lang'   => 'EN',
+    ];
 
-    describe('constructor', function () {
-        it('throws error when SAPNWRFC extension is not loaded', function () {
+    describe('constructor', function () use ($config) {
+        it('throws error when SAPNWRFC extension is not loaded', function () use ($config) {
             if (extension_loaded('sapnwrfc')) {
                 $this->markTestSkipped('SAPNWRFC extension is loaded');
             }
 
-            $server = new Server($this->config);
+            $server = new Server($config);
 
             expect(fn () => new Connection($server))
                 ->toThrow(Error::class);
