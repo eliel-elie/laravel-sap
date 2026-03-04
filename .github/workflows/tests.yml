@@ -31,10 +31,13 @@ jobs:
           extensions: mbstring, json
           coverage: none
 
+      - name: Remove composer.lock
+        run: rm -f composer.lock
+
       - name: Install dependencies
         run: |
           composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/console:${{ matrix.laravel }}" --no-interaction --no-update
-          composer install --prefer-dist --no-interaction --no-progress
+          composer update --prefer-dist --no-interaction --no-progress --prefer-stable
 
       - name: Run Pint (Code Style)
         run: composer lint
@@ -57,8 +60,11 @@ jobs:
           extensions: mbstring, json
           coverage: xdebug
 
+      - name: Remove composer.lock
+        run: rm -f composer.lock
+
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: composer update --prefer-dist --no-interaction --no-progress --prefer-stable
 
       - name: Run tests with coverage
         run: composer test:coverage

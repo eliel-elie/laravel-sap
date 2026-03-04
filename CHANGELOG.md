@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- CI dependency conflicts with Symfony 8.x requiring PHP 8.4
+- GitHub Actions now removes composer.lock before testing to ensure compatibility
+
 ## [v1.0.7] - 2026-03-04
 
 ### Added
