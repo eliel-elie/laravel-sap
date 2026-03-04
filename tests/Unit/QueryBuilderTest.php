@@ -133,7 +133,7 @@ describe('QueryBuilder', function () {
         });
 
         it('combines groups with AND', function () {
-            $builder = new QueryBuilder;
+            $builder  = new QueryBuilder;
             $builder
                 ->where(function ($query) {
                     $query->where('BNAME', 'USER1');
@@ -150,7 +150,7 @@ describe('QueryBuilder', function () {
         });
 
         it('allows nested groups', function () {
-            $builder = new QueryBuilder;
+            $builder     = new QueryBuilder;
             $builder->where(function ($query) {
                 $query->where('BNAME', 'USER1')
                     ->where(function ($subQuery) {
