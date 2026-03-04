@@ -1,0 +1,96 @@
+name: Tests & Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.2, 8.3, 8.4]
+        laravel: [10.*, 11.*, 12.*]
+        exclude:
+          - php: 8.2
+            laravel: 12.*
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/http:${{ matrix.laravel }}" "illuminate/cache:${{ matrix.laravel }}" --no-interaction --no-update
+          composer install --prefer-dist --no-interaction
+
+      - name: Run Pint
+        run: ./vendor/bin/pint --test
+
+      - name: Execute tests
+        run: vendor/bin/pest
+
+  release:
+    needs: test-and-lint
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract Version and Notes from Changelog
+        id: changelog
+        run: |
+          # Extract version (e.g., v1.0.0)
+          VERSION=$(sed -n 's/^## \[\(v[0-9.]*\)\].*/\1/p' CHANGELOG.md | head -n1)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Extract notes using awk (everything between the version header and the next ## header or EOF)
+          awk "/^## \[$VERSION\]/{flag=1;next}/^## /{flag=0}flag" CHANGELOG.md > release_notes.md
+          
+          echo "Detected version: $VERSION"
+          echo "Notes content:"
+          cat release_notes.md
+
+      - name: Check if Tag Exists
+        id: check_tag
+        run: |
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists. Skipping release."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag $VERSION does not exist. Proceeding with release."
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          VERSION: ${{ steps.changelog.outputs.VERSION }}
+
+      - name: Create Release and Tag
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.changelog.outputs.VERSION }}
+          body_path: release_notes.md
+          name: ${{ steps.changelog.outputs.VERSION }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

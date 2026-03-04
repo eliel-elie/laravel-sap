@@ -21,10 +21,9 @@ class QueryBuilder
     /**
      * Create a new instance of Query Builder
      *
-     * @param  TableInterface $parent
      * @return void
      */
-    public function __construct(TableInterface $parent = null)
+    public function __construct(?TableInterface $parent = null)
     {
         $this->parent = $parent;
     }
@@ -35,7 +34,7 @@ class QueryBuilder
      * @param  mixed $value
      * @return $this
      */
-    public function andWhere(string $column, string $operator = null, $value = null)
+    public function andWhere(string|Closure $column, ?string $operator = null, $value = null)
     {
         return $this->where($column, $operator, $value, 'and');
     }
@@ -46,7 +45,7 @@ class QueryBuilder
      * @param  mixed $value
      * @return $this
      */
-    public function orWhere(string $column, string $operator = null, $value = null)
+    public function orWhere(string|Closure $column, ?string $operator = null, $value = null)
     {
         return $this->where($column, $operator, $value, 'or');
     }
@@ -58,7 +57,7 @@ class QueryBuilder
      * @param  mixed          $value
      * @return $this
      */
-    public function where($column, string $operator = null, $value = null, string $boolean = 'and')
+    public function where(string|Closure $column, string|array|null $operator = null, $value = null, string $boolean = 'and')
     {
         // If $column is a Closure we open a group of wheres and close
         // after performing callback.
@@ -108,7 +107,7 @@ class QueryBuilder
     /**
      * Return query options array
      */
-    public function options(array $wheres = null): array
+    public function options(?array $wheres = null): array
     {
         if (is_null($wheres)) {
             $wheres = $this->wheres;

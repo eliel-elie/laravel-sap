@@ -37,7 +37,7 @@ class TestSapConnection extends Command
         if (empty($connections)) {
             $this->error('No SAP connections have been defined.');
 
-            return Command::FAILURE;
+            return self::FAILURE;
         }
 
         $tested = [];
@@ -48,7 +48,7 @@ class TestSapConnection extends Command
 
         $this->table(['Connection', 'Successful', 'Host', 'Username', 'Message', 'Response Time'], $tested);
 
-        return Command::SUCCESS;
+        return self::SUCCESS;
     }
 
     protected function performTest($name, array $connection): array

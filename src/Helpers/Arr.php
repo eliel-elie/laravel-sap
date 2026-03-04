@@ -9,17 +9,16 @@ class Arr
     /**
      * UTF8 encode array.
      *
-     * @param  array|string $input
-     * @return array|string
+     * @param array|string $input
      */
-    public function utf8ize($input)
+    public function utf8ize($input): mixed
     {
         if (is_array($input)) {
             foreach ($input as $key => $value) {
                 $input[$key] = $this->utf8ize($value);
             }
         } else if (is_string($input)) {
-            return utf8_encode($input);
+            return mb_convert_encoding($input, 'UTF-8', 'ISO-8859-1');
         }
 
         return $input;
@@ -46,7 +45,7 @@ class Arr
      * @param  array|mixed $input
      * @return array|mixed
      */
-    public function byteToChar32($input)
+    public function byteToChar32($input): mixed
     {
         if (! is_array($input)) {
             if (mb_strlen($input) !== strlen($input)) {

@@ -35,15 +35,15 @@ class SapServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('sap', function ($app) {
-            return new Sap();
+            return new Sap;
         });
 
         $this->app->singleton('guid', function ($app) {
-            return new Guid();
+            return new Guid;
         });
 
         $this->app->singleton('sarr', function ($app) {
-            return new Arr();
+            return new Arr;
         });
     }
 }
