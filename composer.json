@@ -27,8 +27,8 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/support": "^10 || ^11 || ^12",
-        "illuminate/console": "^10 || ^11 || ^12"
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/console": "^10.0|^11.0|^12.0"
     },
     "extra": {
         "laravel": {
@@ -42,7 +42,7 @@
     },
     "require-dev": {
         "laravel/pint": "^1.27",
-        "pestphp/pest": "^4.4",
+        "pestphp/pest": "^3.0 || ^4.0",
         "mockery/mockery": "^1.6"
     },
     "config": {
