@@ -36,6 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+            composer require "pestphp/pest:^3.0" "pestphp/pest-plugin-laravel:^3.0" "pestphp/pest-plugin-arch:^3.0" --dev --no-interaction --no-update
+          fi
           composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/console:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --prefer-dist --no-interaction --no-progress --prefer-stable
 
