@@ -1,0 +1,141 @@
+name: Main Workflow
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: write
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [8.2, 8.3, 8.4]
+        laravel: [10.*, 11.*, 12.*]
+        exclude:
+          - php: 8.2
+            laravel: 12.*
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, json, dom, curl, libxml, zip, pcntl, pdo, bcmath, soap, intl, iconv, fileinfo
+          coverage: none
+
+      - name: Remove composer.lock
+        run: rm -f composer.lock
+
+      - name: Install dependencies
+        run: |
+          if [[ "${{ matrix.laravel }}" == "12.*" ]]; then
+            composer require "pestphp/pest:^3.0" "pestphp/pest-plugin-laravel:^3.0" "pestphp/pest-plugin-arch:^3.0" --dev --no-interaction --no-update
+          fi
+          composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/console:${{ matrix.laravel }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress --prefer-stable
+
+      - name: Run Pint (Code Style)
+        run: composer lint
+
+      - name: Execute tests
+        run: composer test:dox
+
+  coverage:
+    runs-on: ubuntu-latest
+    name: Code Coverage
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: mbstring, json, dom, curl, libxml, zip, pcntl, pdo, bcmath, soap, intl, iconv, fileinfo
+          coverage: xdebug
+
+      - name: Remove composer.lock
+        run: rm -f composer.lock
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress --prefer-stable
+
+      - name: Run tests with coverage
+        run: composer test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        if: success()
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+
+  release:
+    needs: [tests, coverage]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract Version and Notes from Changelog
+        id: changelog
+        run: |
+          # Extract the first version header (e.g., v1.0.7)
+          VERSION=$(grep -m 1 '^## \[' CHANGELOG.md | sed -n 's/^## \[\(v[0-9.]*\)\].*/\1/p')
+          
+          if [ -z "$VERSION" ]; then
+            echo "Error: Could not find version in CHANGELOG.md"
+            exit 1
+          fi
+          
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+          # Extract notes for this version
+          awk "/^## \[$VERSION\]/{flag=1;next}/^## /{flag=0}flag" CHANGELOG.md > release_notes.md
+          
+          # If notes are empty, use default message
+          if [ ! -s release_notes.md ]; then
+            echo "Release $VERSION" > release_notes.md
+            echo "" >> release_notes.md
+            echo "See [CHANGELOG.md](CHANGELOG.md) for details." >> release_notes.md
+          fi
+
+      - name: Check if Tag Already Exists
+        id: check_tag
+        run: |
+          VERSION=${{ steps.changelog.outputs.VERSION }}
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists. Skipping release."
+            echo "EXISTS=true" >> $GITHUB_OUTPUT
+          else
+            echo "EXISTS=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: steps.check_tag.outputs.EXISTS == 'false'
+        with:
+          tag_name: ${{ steps.changelog.outputs.VERSION }}
+          body_path: release_notes.md
+          name: ${{ steps.changelog.outputs.VERSION }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
