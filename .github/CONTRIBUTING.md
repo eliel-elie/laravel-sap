@@ -33,6 +33,22 @@ To run the tests:
 
 ```bash
 composer test
+
+# With detailed output
+composer test:dox
+
+# With coverage
+composer test:coverage
+```
+
+To check code style:
+
+```bash
+# Check only
+composer lint
+
+# Fix automatically
+composer format
 ```
 
 ## Pull Request Process

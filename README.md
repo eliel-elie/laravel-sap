@@ -115,6 +115,31 @@ $results = $fm->table('USR01')
 ```
 
 
+## Testing
+
+This package includes a comprehensive test suite using [Pest PHP](https://pestphp.com/).
+
+### Running Tests
+
+```bash
+# Run all tests
+php vendor/bin/pest
+
+# Run with detailed output
+php vendor/bin/pest --testdox
+
+# Run with coverage
+php vendor/bin/pest --coverage
+```
+
+### Test Coverage
+
+- ✅ **Unit Tests**: Guid, Arr, QueryBuilder, Server (100% coverage)
+- ⏭️ **Feature Tests**: Connection, Sap, FunctionModule, Table (require SAP connection or mocking)
+
+For more information about testing, see [TESTING.md](TESTING.md).
+
+
 ## License
 
 This software is licensed under the MIT license. See [LICENSE](LICENSE) for details.

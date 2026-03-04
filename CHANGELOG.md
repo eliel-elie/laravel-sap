@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.7] - 2026-03-04
+
+### Added
+- Comprehensive test suite using Pest PHP (44 tests passing)
+- Unit tests for Guid, Arr, QueryBuilder, and Server classes
+- Feature test stubs for SAP-dependent components
+- TESTING.md documentation for test guidelines
+- TEST_SUMMARY.md with detailed test coverage report
+- Composer scripts for testing and linting (`composer test`, `composer lint`, etc.)
+- Separate GitHub Actions workflows for tests and releases
+- WORKFLOWS.md documentation for CI/CD processes
+- Mockery dependency for advanced mocking
+
+### Changed
+- Fixed type hints in QueryBuilder to support Closure parameters
+- Fixed Arr::utf8ize() return type to support mixed types
+- Improved QueryBuilder type safety with union types
+- Separated tests workflow from release workflow
+- Updated CONTRIBUTING.md with new test commands
+- Improved GitHub Actions workflow dependencies
+- Release workflow now triggers only on version tags
+
+### Fixed
+- Connection test to expect Error instead of Exception for missing SAPNWRFC
+- GitHub Actions workflow missing dependencies (illuminate/console)
+
 ## [v1.0.5] - 2026-03-04
 
 ### Changed

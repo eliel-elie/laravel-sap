@@ -53,8 +53,7 @@ class QueryBuilder
     /**
      * Add a basic dynamic clause to the query.
      *
-     * @param  string|Closure $column
-     * @param  mixed          $value
+     * @param  mixed $value
      * @return $this
      */
     public function where(string|Closure $column, string|array|null $operator = null, $value = null, string $boolean = 'and')
