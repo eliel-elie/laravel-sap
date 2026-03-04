@@ -3,7 +3,8 @@
 namespace Elielelie\Sap;
 
 use Elielelie\Sap\Commands\TestSapConnection;
-use Elielelie\Sap\Helpers\{Arr, Guid};
+use Elielelie\Sap\Helpers\Arr;
+use Elielelie\Sap\Helpers\Guid;
 use Illuminate\Support\ServiceProvider;
 
 class SapServiceProvider extends ServiceProvider

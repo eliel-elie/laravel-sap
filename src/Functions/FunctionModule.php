@@ -2,7 +2,6 @@
 
 namespace Elielelie\Sap\Functions;
 
-use Closure;
 use Elielelie\Sap\Connectors\Connection;
 use Elielelie\Sap\Exceptions\FunctionCallException;
 use Elielelie\Sap\Exceptions\FunctionModuleParameterBindException;
@@ -19,15 +18,11 @@ class FunctionModule
 
     /**
      * Connection of the function module.
-     *
-     * @var Connection
      */
     public Connection $connection;
 
     /**
      * FunctionModule parameters
-     *
-     * @var array
      */
     protected array $parameters = [];
 
@@ -38,18 +33,15 @@ class FunctionModule
 
     /**
      * Description of the function module.
-     *
-     * @var Collection
      */
     protected Collection $description;
+
     /**
      * Create a new instance of the object.
      *
-     * @param Connection $connection
-     * @param string     $name
+     * @param  string $name
      * @return void
      */
-
     public function __construct(Connection $connection, $name)
     {
         $this->connection = $connection;
@@ -74,14 +66,13 @@ class FunctionModule
      * Add a parameter to the function module.
      *
      * @param  string $name
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return $this
      */
     public function param($name, $value)
     {
-
         // Perform parameter exists check.
-        if (!$this->description->has($name)) {
+        if (! $this->description->has($name)) {
             throw new FunctionModuleParameterBindException(
                 sprintf(
                     'Function module parameter (%s) not found. Available parameters: %s.',
@@ -92,19 +83,19 @@ class FunctionModule
         }
 
         // Perform parameter type check.
-        $type = $this->description[$name]['type'];
-        $exception = false;
+        $type                    = $this->description[$name]['type'];
+        $exception               = false;
 
-        if (($type === 'RFCTYPE_TABLE' || $type === 'RFCTYPE_STRUCTURE') && !is_array($value)) {
+        if (($type === 'RFCTYPE_TABLE' || $type === 'RFCTYPE_STRUCTURE') && ! is_array($value)) {
             $type .= ' (array)';
             $exception = true;
-        } elseif ($type === 'RFCTYPE_CHAR' && !is_string($value)) {
+        } elseif ($type === 'RFCTYPE_CHAR' && ! is_string($value)) {
             $type .= ' (string)';
             $exception = true;
-        } elseif ($type === 'RFCTYPE_BYTE' && !is_string($value)) {
+        } elseif ($type === 'RFCTYPE_BYTE' && ! is_string($value)) {
             $type .= ' (binary)';
             $exception = true;
-        } elseif ($type === 'RFCTYPE_INT' && !is_int($value)) {
+        } elseif ($type === 'RFCTYPE_INT' && ! is_int($value)) {
             $type .= ' (integer)';
             $exception = true;
         }
@@ -120,6 +111,7 @@ class FunctionModule
         }
 
         $this->parameters[$name] = $value;
+
         return $this;
     }
 
@@ -127,33 +119,31 @@ class FunctionModule
      * Initialize the function module.
      *
      * @return void
+     *
      * @throws FunctionCallException
      */
     private function initialize()
     {
         $this->safe(function () {
-
-            $this->handle = $this->connection
+            $this->handle      = $this->connection
                 ->getHandle()
                 ->getFunction($this->name);
 
             // Save the description.
             $this->description = collect(
                 json_decode(
-                    json_encode($this->handle->getFunctionDescription()),true)
+                    json_encode($this->handle->getFunctionDescription()), true)
             )->except('name');
 
-            if ($this->description->isEmpty() && !empty($this->parameters)) {
+            if ($this->description->isEmpty() && ! empty($this->parameters)) {
                 $this->description = collect($this->parameters);
             }
-
         });
     }
 
     /**
      * Wrap a callable with mixed version exception handle.
      *
-     * @param  callable $callback
      *
      * @return mixed
      */
@@ -161,23 +151,18 @@ class FunctionModule
     {
         try {
             return $callback();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new FunctionCallException($e);
-        }
-        catch (\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             throw new FunctionCallException($e);
         }
     }
 
     /**
      * Get FunctionModule description.
-     *
-     * @return Collection
      */
     public function description(): Collection
     {
         return $this->description;
     }
-    
 }

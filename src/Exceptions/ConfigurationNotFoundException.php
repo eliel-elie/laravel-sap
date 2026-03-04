@@ -4,7 +4,7 @@ namespace Elielelie\Sap\Exceptions;
 
 use Exception;
 
-class ConfigurationNotFoundException extends  Exception
+class ConfigurationNotFoundException extends Exception
 {
     /**
      * Create a new instance of the object.

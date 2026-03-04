@@ -8,7 +8,6 @@ class Sap extends Facade
 {
     /**
      * Return facade accessor
-     * @return string
      */
     protected static function getFacadeAccessor(): string
     {

@@ -14,17 +14,13 @@ class Sap
 {
     /**
      * Active connections.
-     *
-     * @var array
      */
     protected array $connections = [];
 
     /**
      * Return the specified connection if opened or open and return it.
      *
-     * @param string $name
      *
-     * @return Connection
      * @throws Exception
      */
     public function connection(string $name = 'default'): Connection
@@ -32,11 +28,13 @@ class Sap
         if (isset($this->connections[$name])) {
             try {
                 $this->connections[$name]->ping();
+
                 return $this->connections[$name];
             } catch (Exception $e) {
                 // Do nothing.
             }
         }
+
         return $this->open($name);
     }
 
@@ -44,8 +42,6 @@ class Sap
      * Open a connection to specfied server using type
      * appropriate method.
      *
-     * @param string $name
-     * @return Connection
      * @throws Exception
      */
     public function open(string $name = 'default'): Connection
@@ -71,13 +67,11 @@ class Sap
 
     /**
      * Apply a callback over all connections.
-     *
-     * @param  callable $callback
-     * @return array
      */
     public function iterator(callable $callback): array
     {
         $result = [];
+
         foreach (array_keys(Config::get('sap.connections')) as $name) {
             try {
                 $result[$name] = $callback($this->connection($name), $name);
@@ -87,6 +81,7 @@ class Sap
                 throw new ConfigurationNotFoundException($name);
             }
         }
+
         return $result;
     }
 
@@ -104,6 +99,7 @@ class Sap
                 $this->open($name);
             } catch (ConnectionException $e) {
                 $report[$name] = false;
+
                 continue;
             }
             $report[$name] = true;
@@ -114,16 +110,12 @@ class Sap
 
     /**
      * Get the config for specified connection.
-     *
-     * @param string $name
-     *
-     * @return array
      */
     private function config(string $name): array
     {
         $config = Config::get('sap.connections.' . $name);
 
-        if (!$config) {
+        if (! $config) {
             throw new ConfigurationNotFoundException($name);
         }
 

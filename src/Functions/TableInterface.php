@@ -10,7 +10,6 @@ interface TableInterface
     /**
      * Sets the delimiter used to concatenate table rows.
      *
-     * @param string $value
      * @return $this
      */
     public function delimiter(string $value): self;
@@ -18,7 +17,6 @@ interface TableInterface
     /**
      * Sets the fields to be retrieved.
      *
-     * @param array $fields
      * @return $this
      */
     public function fields(array $fields): self;
@@ -26,7 +24,6 @@ interface TableInterface
     /**
      * Executes the query and returns the results as a Collection.
      *
-     * @return Collection
      * @throws FunctionModuleParameterBindException
      */
     public function get(): Collection;
@@ -34,7 +31,6 @@ interface TableInterface
     /**
      * Limits the number of rows returned.
      *
-     * @param int $number
      * @return $this
      */
     public function limit(int $number): self;
@@ -42,7 +38,6 @@ interface TableInterface
     /**
      * Skips a specified number of rows in the result.
      *
-     * @param int $number
      * @return $this
      */
     public function offset(int $number): self;
@@ -50,7 +45,6 @@ interface TableInterface
     /**
      * Sets the table to be queried.
      *
-     * @param string $name
      * @return $this
      */
     public function table(string $name): self;
